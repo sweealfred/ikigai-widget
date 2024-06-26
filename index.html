@@ -12,7 +12,7 @@
             padding: 20px;
             background-color: #f0f0f0;
         }
-        .ikigai-widget {
+        .ikigai-widget, .diagram-page {
             background-color: white;
             padding: 20px;
             border-radius: 10px;
@@ -37,102 +37,122 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        .result-section {
-            margin-top: 20px;
-        }
         #ikigai-diagram {
-            width: 400px;
-            height: 400px;
+            width: 600px;
+            height: 600px;
             margin: 20px auto;
             position: relative;
         }
         .circle {
             position: absolute;
-            width: 200px;
-            height: 200px;
+            width: 300px;
+            height: 300px;
             border: 2px solid black;
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 12px;
+            font-size: 14px;
             text-align: center;
             padding: 10px;
             box-sizing: border-box;
+            overflow: hidden;
         }
-        #love { top: 0; left: 50px; }
-        #good-at { top: 0; right: 50px; }
-        #world-needs { bottom: 0; left: 50px; }
-        #paid-for { bottom: 0; right: 50px; }
-        #ikigai { 
-            top: 100px; 
-            left: 100px; 
-            width: 200px; 
-            height: 200px; 
+        #love { top: 0; left: 150px; }
+        #world-needs { top: 150px; right: 0; }
+        #paid-for { bottom: 0; left: 150px; }
+        #good-at { top: 150px; left: 0; }
+        .intersection {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            background-color: #f0f0f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            text-align: center;
+        }
+        #mission { top: 75px; right: 75px; }
+        #vocation { bottom: 75px; right: 75px; }
+        #profession { bottom: 75px; left: 75px; }
+        #passion { top: 75px; left: 75px; }
+        #ikigai {
+            top: 150px;
+            left: 150px;
+            width: 300px;
+            height: 300px;
             background-color: rgba(0,0,0,0.1);
             z-index: 10;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <div class="ikigai-widget">
+    <div class="ikigai-widget" id="input-page">
         <h1>Find Your Ikigai</h1>
         
         <div class="input-section">
             <h2>What you love:</h2>
             <textarea id="love-input"></textarea>
             
-            <h2>What you're good at:</h2>
-            <textarea id="good-at-input"></textarea>
-            
             <h2>What the world needs:</h2>
             <textarea id="world-needs-input"></textarea>
             
             <h2>What you can be paid for:</h2>
             <textarea id="paid-for-input"></textarea>
+            
+            <h2>What you're good at:</h2>
+            <textarea id="good-at-input"></textarea>
         </div>
         
         <button onclick="findIkigai()">Find My Ikigai</button>
-        
-        <div id="result" class="result-section"></div>
-        
-        <div id="ikigai-diagram" style="display: none;">
+    </div>
+
+    <div class="diagram-page" id="diagram-page" style="display: none;">
+        <div id="ikigai-diagram">
             <div id="love" class="circle"></div>
-            <div id="good-at" class="circle"></div>
             <div id="world-needs" class="circle"></div>
             <div id="paid-for" class="circle"></div>
-            <div id="ikigai" class="circle"></div>
+            <div id="good-at" class="circle"></div>
+            <div id="mission" class="intersection">Mission</div>
+            <div id="vocation" class="intersection">Vocation</div>
+            <div id="profession" class="intersection">Profession</div>
+            <div id="passion" class="intersection">Passion</div>
+            <div id="ikigai" class="circle">Ikigai<br><span id="suggested-profession"></span></div>
         </div>
     </div>
 
     <script>
     function findIkigai() {
         const love = document.getElementById('love-input').value;
-        const goodAt = document.getElementById('good-at-input').value;
         const worldNeeds = document.getElementById('world-needs-input').value;
         const paidFor = document.getElementById('paid-for-input').value;
+        const goodAt = document.getElementById('good-at-input').value;
         
-        document.getElementById('love').innerText = love;
-        document.getElementById('good-at').innerText = goodAt;
-        document.getElementById('world-needs').innerText = worldNeeds;
-        document.getElementById('paid-for').innerText = paidFor;
-        document.getElementById('ikigai').innerText = "Your Ikigai";
-        
-        document.getElementById('ikigai-diagram').style.display = 'block';
+        document.getElementById('love').innerHTML = `<div>${love}</div>`;
+        document.getElementById('world-needs').innerHTML = `<div>${worldNeeds}</div>`;
+        document.getElementById('paid-for').innerHTML = `<div>${paidFor}</div>`;
+        document.getElementById('good-at').innerHTML = `<div>${goodAt}</div>`;
         
         const suggestedProfessions = suggestProfessions(love, goodAt, worldNeeds, paidFor);
+        document.getElementById('suggested-profession').innerText = suggestedProfessions[0];
         
-        const result = `
-            <h2>Your Ikigai Analysis:</h2>
-            <p>Based on your input, your ikigai is at the intersection of what you love, what you're good at, what the world needs, and what you can be paid for.</p>
-            <h3>Suggested Professions:</h3>
-            <ul>
-                ${suggestedProfessions.map(prof => `<li>${prof}</li>`).join('')}
-            </ul>
-            <p>Consider how you can align these elements to find your purpose and fulfillment.</p>
-        `;
-        
-        document.getElementById('result').innerHTML = result;
+        document.getElementById('input-page').style.display = 'none';
+        document.getElementById('diagram-page').style.display = 'block';
+
+        adjustFontSize();
+    }
+
+    function adjustFontSize() {
+        const circles = document.querySelectorAll('.circle');
+        circles.forEach(circle => {
+            let fontSize = 14;
+            while (circle.scrollHeight > circle.clientHeight && fontSize > 8) {
+                fontSize--;
+                circle.style.fontSize = `${fontSize}px`;
+            }
+        });
     }
 
     function suggestProfessions(love, goodAt, worldNeeds, paidFor) {
