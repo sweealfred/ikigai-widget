@@ -4,105 +4,135 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ikigai Widget</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #333333;
+            --circle-color: #f0f0f0;
+            --border-color: #666666;
+        }
+        .dark-theme {
+            --bg-color: #1f1f1f;
+            --text-color: #e0e0e0;
+            --circle-color: #2f2f2f;
+            --border-color: #999999;
+        }
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
+            font-family: 'Inter', sans-serif;
+            max-width: 600px;
             margin: 0 auto;
-            padding: 20px;
-            background-color: #f0f0f0;
+            padding: 10px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s, color 0.3s;
         }
         .ikigai-widget, .diagram-page {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
+            background-color: var(--bg-color);
+            padding: 10px;
+            border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
         .input-section textarea {
             width: 100%;
-            height: 80px;
-            margin-bottom: 15px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            height: 60px;
+            margin-bottom: 10px;
+            padding: 5px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 8px;
         }
         button {
             display: block;
-            margin: 20px auto;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #007bff;
-            color: white;
+            margin: 10px auto;
+            padding: 8px 16px;
+            font-size: 8px;
+            background-color: #4a4a4a;
+            color: #ffffff;
             border: none;
-            border-radius: 5px;
+            border-radius: 4px;
             cursor: pointer;
         }
         #ikigai-diagram {
-            width: 600px;
-            height: 600px;
-            margin: 20px auto;
+            width: 300px;
+            height: 300px;
+            margin: 10px auto;
             position: relative;
         }
         .circle {
             position: absolute;
-            width: 300px;
-            height: 300px;
-            border: 2px solid black;
+            width: 150px;
+            height: 150px;
+            border: 1px solid var(--border-color);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 14px;
+            font-size: 8px;
             text-align: center;
-            padding: 10px;
+            padding: 5px;
             box-sizing: border-box;
             overflow: hidden;
+            background-color: var(--circle-color);
         }
-        #love { top: 0; left: 150px; }
-        #world-needs { top: 150px; right: 0; }
-        #paid-for { bottom: 0; left: 150px; }
-        #good-at { top: 150px; left: 0; }
+        #love { top: 0; left: 75px; }
+        #world-needs { top: 75px; right: 0; }
+        #paid-for { bottom: 0; left: 75px; }
+        #good-at { top: 75px; left: 0; }
         .intersection {
             position: absolute;
-            width: 150px;
-            height: 150px;
-            background-color: #f0f0f0;
+            width: 75px;
+            height: 75px;
+            background-color: var(--circle-color);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 12px;
+            font-size: 6px;
             text-align: center;
         }
-        #mission { top: 75px; right: 75px; }
-        #vocation { bottom: 75px; right: 75px; }
-        #profession { bottom: 75px; left: 75px; }
-        #passion { top: 75px; left: 75px; }
+        #mission { top: 37.5px; right: 37.5px; }
+        #vocation { bottom: 37.5px; right: 37.5px; }
+        #profession { bottom: 37.5px; left: 37.5px; }
+        #passion { top: 37.5px; left: 37.5px; }
         #ikigai {
-            top: 150px;
-            left: 150px;
-            width: 300px;
-            height: 300px;
-            background-color: rgba(0,0,0,0.1);
+            top: 75px;
+            left: 75px;
+            width: 150px;
+            height: 150px;
+            background-color: rgba(0,0,0,0.05);
             z-index: 10;
             font-weight: bold;
+        }
+        #theme-toggle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: transparent;
+            border: none;
+            color: var(--text-color);
+            font-size: 14px;
+            cursor: pointer;
         }
     </style>
 </head>
 <body>
+    <button id="theme-toggle" onclick="toggleTheme()">🌓</button>
     <div class="ikigai-widget" id="input-page">
-        <h1>Find Your Ikigai</h1>
+        <h1 style="font-size: 14px; text-align: center;">Find Your Ikigai</h1>
         
         <div class="input-section">
-            <h2>What you love:</h2>
+            <h2 style="font-size: 10px;">What you love:</h2>
             <textarea id="love-input"></textarea>
             
-            <h2>What the world needs:</h2>
+            <h2 style="font-size: 10px;">What the world needs:</h2>
             <textarea id="world-needs-input"></textarea>
             
-            <h2>What you can be paid for:</h2>
+            <h2 style="font-size: 10px;">What you can be paid for:</h2>
             <textarea id="paid-for-input"></textarea>
             
-            <h2>What you're good at:</h2>
+            <h2 style="font-size: 10px;">What you're good at:</h2>
             <textarea id="good-at-input"></textarea>
         </div>
         
@@ -121,6 +151,7 @@
             <div id="passion" class="intersection">Passion</div>
             <div id="ikigai" class="circle">Ikigai<br><span id="suggested-profession"></span></div>
         </div>
+        <button onclick="goBack()">Go Back</button>
     </div>
 
     <script>
@@ -147,8 +178,8 @@
     function adjustFontSize() {
         const circles = document.querySelectorAll('.circle');
         circles.forEach(circle => {
-            let fontSize = 14;
-            while (circle.scrollHeight > circle.clientHeight && fontSize > 8) {
+            let fontSize = 8;
+            while (circle.scrollHeight > circle.clientHeight && fontSize > 4) {
                 fontSize--;
                 circle.style.fontSize = `${fontSize}px`;
             }
@@ -182,7 +213,16 @@
             suggestions.push('Career Coach', 'Life Coach', 'Counselor');
         }
 
-        return suggestions.slice(0, 3); // Return top 3 suggestions
+        return suggestions.slice(0, 3);
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('dark-theme');
+    }
+
+    function goBack() {
+        document.getElementById('input-page').style.display = 'block';
+        document.getElementById('diagram-page').style.display = 'none';
     }
     </script>
 </body>
