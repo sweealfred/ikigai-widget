@@ -1,0 +1,69 @@
+<div class="ikigai-widget">
+  <h1>Find Your Ikigai</h1>
+  
+  <div class="input-section">
+    <h2>What you love:</h2>
+    <textarea id="love"></textarea>
+    
+    <h2>What you're good at:</h2>
+    <textarea id="good-at"></textarea>
+    
+    <h2>What the world needs:</h2>
+    <textarea id="world-needs"></textarea>
+    
+    <h2>What you can be paid for:</h2>
+    <textarea id="paid-for"></textarea>
+  </div>
+  
+  <button onclick="findIkigai()">Find My Ikigai</button>
+  
+  <div id="result" class="result-section"></div>
+</div><style>
+  .ikigai-widget {
+    font-family: Arial, sans-serif;
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .input-section textarea {
+    width: 100%;
+    height: 100px;
+    margin-bottom: 20px;
+  }
+  
+  button {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 20px;
+    font-size: 16px;
+  }
+  
+  .result-section {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+  }
+</style><script>
+function findIkigai() {
+  const love = document.getElementById('love').value;
+  const goodAt = document.getElementById('good-at').value;
+  const worldNeeds = document.getElementById('world-needs').value;
+  const paidFor = document.getElementById('paid-for').value;
+  
+  const result = `
+    <h2>Your Ikigai:</h2>
+    <p>Based on your input, your ikigai might be found at the intersection of:</p>
+    <ul>
+      <li>What you love: ${love}</li>
+      <li>What you're good at: ${goodAt}</li>
+      <li>What the world needs: ${worldNeeds}</li>
+      <li>What you can be paid for: ${paidFor}</li>
+    </ul>
+    <p>Consider how you can combine these elements to find your purpose and fulfillment.</p>
+  `;
+  
+  document.getElementById('result').innerHTML = result;
+}
+</script>
