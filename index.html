@@ -9,13 +9,11 @@
         :root {
             --bg-color: #ffffff;
             --text-color: #333333;
-            --circle-color: #f0f0f0;
             --border-color: #666666;
         }
         .dark-theme {
             --bg-color: #1f1f1f;
             --text-color: #e0e0e0;
-            --circle-color: #2f2f2f;
             --border-color: #999999;
         }
         body {
@@ -26,6 +24,7 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: background-color 0.3s, color 0.3s;
+            font-size: 10px;
         }
         .ikigai-widget, .diagram-page {
             background-color: var(--bg-color);
@@ -42,13 +41,13 @@
             border-radius: 4px;
             background-color: var(--bg-color);
             color: var(--text-color);
-            font-size: 8px;
+            font-size: 10px;
         }
         button {
             display: block;
             margin: 10px auto;
             padding: 8px 16px;
-            font-size: 8px;
+            font-size: 10px;
             background-color: #4a4a4a;
             color: #ffffff;
             border: none;
@@ -70,12 +69,12 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 8px;
+            font-size: 10px;
             text-align: center;
             padding: 5px;
             box-sizing: border-box;
             overflow: hidden;
-            background-color: var(--circle-color);
+            background-color: rgba(255, 255, 255, 0.1);
         }
         #love { top: 0; left: 75px; }
         #world-needs { top: 75px; right: 0; }
@@ -85,11 +84,10 @@
             position: absolute;
             width: 75px;
             height: 75px;
-            background-color: var(--circle-color);
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 6px;
+            font-size: 8px;
             text-align: center;
         }
         #mission { top: 37.5px; right: 37.5px; }
@@ -101,7 +99,7 @@
             left: 75px;
             width: 150px;
             height: 150px;
-            background-color: rgba(0,0,0,0.05);
+            background-color: rgba(255, 255, 255, 0.2);
             z-index: 10;
             font-weight: bold;
         }
@@ -115,6 +113,17 @@
             font-size: 14px;
             cursor: pointer;
         }
+        .circle-label {
+            position: absolute;
+            font-size: 8px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+        }
+        #love .circle-label { top: 5px; }
+        #world-needs .circle-label { right: 5px; }
+        #paid-for .circle-label { bottom: 5px; }
+        #good-at .circle-label { left: 5px; }
     </style>
 </head>
 <body>
@@ -123,16 +132,16 @@
         <h1 style="font-size: 14px; text-align: center;">Find Your Ikigai</h1>
         
         <div class="input-section">
-            <h2 style="font-size: 10px;">What you love:</h2>
+            <h2>What you love:</h2>
             <textarea id="love-input"></textarea>
             
-            <h2 style="font-size: 10px;">What the world needs:</h2>
+            <h2>What the world needs:</h2>
             <textarea id="world-needs-input"></textarea>
             
-            <h2 style="font-size: 10px;">What you can be paid for:</h2>
+            <h2>What you can be paid for:</h2>
             <textarea id="paid-for-input"></textarea>
             
-            <h2 style="font-size: 10px;">What you're good at:</h2>
+            <h2>What you're good at:</h2>
             <textarea id="good-at-input"></textarea>
         </div>
         
@@ -141,10 +150,22 @@
 
     <div class="diagram-page" id="diagram-page" style="display: none;">
         <div id="ikigai-diagram">
-            <div id="love" class="circle"></div>
-            <div id="world-needs" class="circle"></div>
-            <div id="paid-for" class="circle"></div>
-            <div id="good-at" class="circle"></div>
+            <div id="love" class="circle">
+                <div class="circle-label">What you<br><strong>LOVE</strong></div>
+                <div class="circle-content"></div>
+            </div>
+            <div id="world-needs" class="circle">
+                <div class="circle-label">What the world<br><strong>NEEDS</strong></div>
+                <div class="circle-content"></div>
+            </div>
+            <div id="paid-for" class="circle">
+                <div class="circle-label">What you can be<br><strong>PAID FOR</strong></div>
+                <div class="circle-content"></div>
+            </div>
+            <div id="good-at" class="circle">
+                <div class="circle-label">What you are<br><strong>GOOD AT</strong></div>
+                <div class="circle-content"></div>
+            </div>
             <div id="mission" class="intersection">Mission</div>
             <div id="vocation" class="intersection">Vocation</div>
             <div id="profession" class="intersection">Profession</div>
@@ -161,10 +182,10 @@
         const paidFor = document.getElementById('paid-for-input').value;
         const goodAt = document.getElementById('good-at-input').value;
         
-        document.getElementById('love').innerHTML = `<div>${love}</div>`;
-        document.getElementById('world-needs').innerHTML = `<div>${worldNeeds}</div>`;
-        document.getElementById('paid-for').innerHTML = `<div>${paidFor}</div>`;
-        document.getElementById('good-at').innerHTML = `<div>${goodAt}</div>`;
+        document.querySelector('#love .circle-content').innerHTML = love;
+        document.querySelector('#world-needs .circle-content').innerHTML = worldNeeds;
+        document.querySelector('#paid-for .circle-content').innerHTML = paidFor;
+        document.querySelector('#good-at .circle-content').innerHTML = goodAt;
         
         const suggestedProfessions = suggestProfessions(love, goodAt, worldNeeds, paidFor);
         document.getElementById('suggested-profession').innerText = suggestedProfessions[0];
@@ -176,10 +197,10 @@
     }
 
     function adjustFontSize() {
-        const circles = document.querySelectorAll('.circle');
+        const circles = document.querySelectorAll('.circle-content');
         circles.forEach(circle => {
-            let fontSize = 8;
-            while (circle.scrollHeight > circle.clientHeight && fontSize > 4) {
+            let fontSize = 10;
+            while (circle.scrollHeight > circle.clientHeight && fontSize > 6) {
                 fontSize--;
                 circle.style.fontSize = `${fontSize}px`;
             }
