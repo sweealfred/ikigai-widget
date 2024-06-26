@@ -6,6 +6,38 @@
     <title>Ikigai Widget</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        /* ... (previous styles remain the same) ... */
+
+        .circle-label {
+            position: absolute;
+            font-size: 10px;
+            font-weight: bold;
+            text-align: center;
+            width: 100%;
+        }
+        #love .circle-label { top: 10px; }
+        #world-needs .circle-label { 
+            right: -35px; 
+            text-align: left;
+            width: 70px;
+        }
+        #paid-for .circle-label { bottom: 10px; }
+        #good-at .circle-label { 
+            left: -35px; 
+            text-align: right;
+            width: 70px;
+        }
+        .circle-content {
+            font-size: 9px;
+            max-width: 80%;
+            max-height: 80%;
+            overflow: hidden;
+        }
+        #love .circle-content { transform: translateY(20px); }
+        #world-needs .circle-content { transform: translateX(-20px); }
+        #paid-for .circle-content { transform: translateY(-20px); }
+        #good-at .circle-content { transform: translateX(20px); }
+    <style>
         :root {
             --bg-color: #ffffff;
             --text-color: #333333;
